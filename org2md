@@ -1,0 +1,3 @@
+#!/bin/bash
+
+(sed -E "s/^(\*+)/\*\1/" < "${1:-/dev/stdin}") | sed -E "s/(^\#\+TITLE: )(.*)$/\* \2/" | sed -E "s/(^\#\+DATE: \<)(.*)(\>$)/\/\2\//" | pandoc -f org -t markdown | sed -E 's/([^\\])(\\{1})(.)/\1\3/g'
