@@ -203,3 +203,39 @@ files!
 As you may have realised, the `n p` command simply returns `$NOTES` or
 `$NOTES/$NB` as appropriate.
 
+## Org Processing Scripts
+
+The scripts `org2md` and `org2task` deal with Org files. `org2md` is a Pandoc
+wrapper that deals with some of the issues Pandoc has in processing Org files.
+`org2task` interfaces Org Mode TODOs with Taskwarrior.
+
+### `org2md`
+
+When Pandoc converts Org files to Markdown, it strips out the `#+TITLE` and
+`#+DATE` lines completely. This is deeply unhelpful. `org2md` fixes this by
+making `#+TITLE` into a top-level heading and making one-star Org headings into
+second-level Markdown headings, etc. For example, `org2md` will convert the
+above example Org shortnotes file to:
+
+```md
+# 17th Jan 2022 Short Notes
+
+* 2022-01-17 Mon *
+
+## A quick note
+*12:02:45*
+
+## This is a short note
+*22:14:57*
+```
+
+`org2md` can accept a filename as an argument or can accept a file on STDIN.
+
+### `org2task`
+
+`org2task` takes the filename of an Org file as an argument and searches for
+any outstanding Org Mode TODOs in the file. The TODOs are added to Taskwarrior,
+a Taskopen-compatible reference to the Org file is added as an annotation, and
+the TODO status is changed to FILED in the Org file.
+
+I find it an extremely helpful way to ingest meeting minutes into Taskwarrior.
