@@ -190,7 +190,9 @@ variables:
 
 This will list all the notes in the `.notes/work/` folder. If you want to set
 a default notebook, you can set `$NB` in your `.bashrc` along with `$NOTES`. In
-that case, command variables can be used as an override.
+that case, command variables can be used as an override. Note IDs are specific
+to a given folder, so `NB=work n 1` and `NB=home n 1` refer to two different
+files!
 
 As you may have realised, the `n p` command simply returns `$NOTES` or
 `$NOTES/$NB` as appropriate.
