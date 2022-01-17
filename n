@@ -23,10 +23,20 @@ elif [ $1 = "p" ]; then
 	echo "$NOTES/$NB"
 elif [ $1 = "c" ]; then
 	# Create a new note with title given and open it.
-	file="$(date +%y%m%d)-$(echo $2 | sed -E "s/[^A-Za-z0-9._-]/_/g").org"
-	title="#+TITLE: $2"
-	date="#+DATE: <$(date "+%Y-%m-%d %a %H:%M")>"
-	echo -e "$title\n$date\n" >> $NOTES/$NB/$file
+	if [ $2 = "org" ]; then
+		file="$(date +%y%m%d)-$(echo $3 | sed -E "s/[^A-Za-z0-9._-]/_/g").org"
+		title="#+TITLE: $3"
+		date="#+DATE: <$(date "+%Y-%m-%d %a %H:%M")>"
+		echo -e "$title\n$date\n" >> $NOTES/$NB/$file
+	elif [ $2 = "md" ]; then
+		file="$(date +%y%m%d)-$(echo $3 | sed -E "s/[^A-Za-z0-9._-]/_/g").md"
+		title="# $3"
+		date="*$(date "+%Y-%m-%d %a %H:%M")*"
+		echo -e "$title\n\n$date\n" >> $NOTES/$NB/$file
+	else
+		echo "Usage is n c [org|md] [Title of note]"
+		exit 1
+	fi
 	$EDITOR "$NOTES/$NB/$file"
 elif [ $1 = "a" ]; then
 	# Append to today's shortnotes file, or create it if it doesn't exist.
