@@ -81,7 +81,7 @@ yet exist. After running the command the file would look like:
 ```
 
 You can easily get the absolute filepath to today's shortnotes file with the
-command `n t`. Maybe features of `n` revolve around retrieving the absolute
+command `n t`. Many features of `n` revolve around retrieving the absolute
 filepath, as that is the thing you can use to manipulate your notes with other
 standard GNU and Unix programs. For example, if you want to see what's currently
 in today's shortnotes file:
@@ -111,7 +111,7 @@ to construct the correct path:
 ```
 
 You can also use this to directly open a note if you can already remember its
-filname.
+filename.
 
 If you can't remember the filename (i.e., most of the time, probably), you can
 use the list (`n ls`) and query (`n q [search string]`) functions to find it.
@@ -125,6 +125,8 @@ folders; more on that later). For example:
 	3	17th Jan 2022 Short Notes (220117-shortnotes.org)
 	4	Another note (note.org)
 	5	220116 Meeting Minutes (220116-meeting.org)
+	6	work/
+	7	home/
 ```
 
 You can then use the command `n [ID]` to fetch the absolute filepath so you can
@@ -151,7 +153,8 @@ The output of `n q [search]` is similar:
 
 The IDs associated with each note are semi-volatile. They will not change as
 long as no notes or sub-folders are added to or removed from the working notes
-folder.
+folder. If changes do happen, it is highly likely the IDs will change. That is
+the trade-off being made for statelessness.
 
 ### Notebooks
 
@@ -188,4 +191,7 @@ variables:
 This will list all the notes in the `.notes/work/` folder. If you want to set
 a default notebook, you can set `$NB` in your `.bashrc` along with `$NOTES`. In
 that case, command variables can be used as an override.
+
+As you may have realised, the `n p` command simply returns `$NOTES` or
+`$NOTES/$NB` as appropriate.
 
