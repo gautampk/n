@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Created by Gautam Kambhampati
+# github.com/gautampk
+# gautampk.com
+#
+# Published under a GNU GPLv3.0 licence (see Github for details).
+
 if [[ $1 =~ ^[0-9]+$ ]]; then
 	# Return the absolute filepath for the note ID given.
 	echo "$NOTES/$NB/$(ls -p $NOTES/$NB | sed -n "$1p")"
