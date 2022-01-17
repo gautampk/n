@@ -1,0 +1,81 @@
+#!/bin/bash
+
+if [[ $1 =~ ^[0-9]+$ ]]; then
+	# Return the absolute filepath for the note ID given.
+	echo "$NOTES/$NB/$(ls -p $NOTES/$NB | sed -n "$1p")"
+elif [ $1 = "t" ]; then
+	# Return the absolute filepath of today's shortnotes file.
+	echo "$NOTES/$NB/$(date +%y%m%d)-shortnotes.org"
+elif [ $1 = "qf" ]; then
+	# Search all note bodies for string and return absolute filepaths.
+    grep -rnl $NOTES/$NB -e "$2"
+elif [ $1 = "qf1" ]; then
+	# Same as above but only return the first filepath.
+	grep -rnl $NOTES/$NB -e "$2" | sed -n "1p"
+elif [ $1 = "sf" ]; then
+	# Searching filepaths now...
+	find $NOTES/$NB -name "$2" -print
+elif [ $1 = "sf1" ]; then
+	# Again return only the first.
+	find $NOTES/$NB -name "$2" -print | sed -n "1p"
+elif [ $1 = "p" ]; then
+	# Return the current working directory, for convenience.
+	echo "$NOTES/$NB"
+elif [ $1 = "c" ]; then
+	# Create a new note with title given and open it.
+	file="$(date +%y%m%d)-$(echo $2 | sed -E "s/[^A-Za-z0-9._-]/_/g").org"
+	title="#+TITLE: $2"
+	date="#+DATE: <$(date "+%Y-%m-%d %a %H:%M")>"
+	echo -e "$title\n$date\n" >> $NOTES/$NB/$file
+	$EDITOR "$NOTES/$NB/$file"
+elif [ $1 = "a" ]; then
+	# Append to today's shortnotes file, or create it if it doesn't exist.
+	file="$(date +%y%m%d)-shortnotes.org"
+	line="\n* $2\n  /$(date +%H:%M:%S)/"
+
+	if [ -f "$NOTES/$NB/$file" ]; then
+		echo -e "$line" >> $NOTES/$NB/$file
+	else
+		title="#+TITLE: $(date "+%dth %b %Y") Short Notes"                           
+		date="#+DATE: <$(date "+%Y-%m-%d %a")>"
+		echo -e "$title\n$date\n$line" >> $NOTES/$NB/$file
+	fi
+elif [ $1 = "ls" ]; then
+	# List everything in notebook (including folders)
+	# and try to find titles for .org and .md notes.
+	ls -p $NOTES/$NB | cat -n |
+	while read line
+	do
+		num=$(echo $line | sed -E "s/([0-9]+) (.+)/\1/")
+		file=$(echo $line | sed -E "s/([0-9]+) (.+)/\2/")
+		ext=$(echo $file | sed -E "s/.*\.(.+)/\1/")
+		
+		unset title
+		if [ $ext = "org" ]; then
+			title=$(grep -i "$NOTES/$NB/$file" -e "#+TITLE:" |
+				sed -n "1p" | sed -E "s/\#\+TITLE: (.*)/\1/i"
+			)
+		elif [ $ext = "md" ]; then
+			title=$(grep "$NOTES/$NB/$file" -e "^# " |
+				sed -n "1p" | sed -E "s/\# (.*)/\1/"
+			)
+		fi
+
+		if [ -z "$title" ]; then
+			title=$file
+		else
+			title="$title ($file)"
+		fi
+
+		echo -e "\t$num\t$title"
+	done
+elif [ $1 = "q" ]; then
+	# Search note bodies and return ID numbers rather than file paths.
+	grep -sn "$2" $NOTES/$NB/{*,.*} |
+	while read line
+	do
+		ls -p $NOTES/$NB | cat -n |
+			grep $(basename $(echo $line | sed -E "s/([^:]+):(.*)/\1/"))
+		echo -e "\t$(echo $line | sed -E "s/([^:]+):(.*)/\2/")\n"
+	done
+fi
