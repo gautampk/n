@@ -141,7 +141,13 @@ As you can see, `n ls` automatically fetches the title from inside the notes.
 This works for both Org (using the `#+TITLE`) and Markdown (taking the first
 top-level heading) files.
 
-The output of `n q [search]` is similar:
+The query command (`n q`) searches through the contents of all notes in the
+working notes folder. You can use whatever tagging system suits you best
+and put the tags wherever you want inside your notes files, and `n q` will
+find them. Or, you can not use tags and just search for keywords in the text
+of your notes. It's entirely up to you. `n q` is built on a Grep call, so
+anything that will work in Grep will work as a search string (including
+regex). The output of `n q [search]` is similar to `n ls`:
 
 ```bash
 % n q "test"
@@ -167,16 +173,16 @@ For example, suppose we have the following file structure:
 
 ```
 .notes/
-	|
-	home/
-	| |
-	| notes...
-	|
-	work/
-	| |
-	| notes...
-	|
-	notes...
+  |
+  home/
+  | |
+  | notes...
+  |
+  work/
+  | |
+  | notes...
+  |
+  notes...
 ```
 
 and have set `NOTES=/path/to/.notes` in `.bashrc`. By default, `n` will only be
