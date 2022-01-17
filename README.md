@@ -230,6 +230,8 @@ above example Org shortnotes file to:
 ```
 
 `org2md` can accept a filename as an argument or can accept a file on STDIN.
+It outputs its results to STDOUT so can be piped to another program (like
+`mdcat`) or dumped into a file.
 
 ### `org2task`
 
