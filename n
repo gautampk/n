@@ -31,8 +31,8 @@ elif [ $1 = "c" ]; then
 	# Create a new note with title given and open it.
 	if [ $2 = "org" ]; then
 		file="$(date +%y%m%d)-$(echo $3 | sed -E "s/[^A-Za-z0-9._-]/_/g").org"
-		title="#+TITLE: $3"
-		date="#+DATE: <$(date "+%Y-%m-%d %a %H:%M")>"
+		title="#+title: $3"
+		date="#+date: [$(date "+%Y-%m-%d %a %H:%M")]"
 		echo -e "$title\n$date\n" >> $NOTES/$NB/$file
 	elif [ $2 = "md" ]; then
 		file="$(date +%y%m%d)-$(echo $3 | sed -E "s/[^A-Za-z0-9._-]/_/g").md"
@@ -46,15 +46,16 @@ elif [ $1 = "c" ]; then
 	$EDITOR "$NOTES/$NB/$file"
 elif [ $1 = "a" ]; then
 	# Append to today's shortnotes file, or create it if it doesn't exist.
-	file="$(date +%y%m%d)-shortnotes.org"
-	line="\n* $2\n  /$(date +%H:%M:%S)/"
+	file="$(date +%Y_%m_%d).org"
+	line="\n* $2\n[$(date "+%Y-%m-%d %a %H:%M:%S")]"
 
-	if [ -f "$NOTES/$NB/$file" ]; then
-		echo -e "$line" >> $NOTES/$NB/$file
+	if [ -f "$NOTES/$JOURNAL/$file" ]; then
+		echo -e "$line" >> $NOTES/$JOURNAL/$file
 	else
-		title="#+TITLE: $(date "+%dth %b %Y") Short Notes"                           
-		date="#+DATE: <$(date "+%Y-%m-%d %a")>"
-		echo -e "$title\n$date\n$line" >> $NOTES/$NB/$file
+#		title="#+TITLE: $(date "+%dth %b %Y") Short Notes"                           
+#		date="#+DATE: <$(date "+%Y-%m-%d %a")>"
+#		echo -e "$title\n$date\n$line" >> $NOTES/$NB/$file
+		echo -e "$line" >> $NOTES/$JOURNAL/$file
 	fi
 elif [ $1 = "ls" ]; then
 	# List everything in notebook (including folders)
